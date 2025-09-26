@@ -19,6 +19,7 @@
   "exclude": [
     "scripts/**/*",
     "tests/**/*",
+    "examples/**/*",
     "**/*.spec.ts",
     "**/*.test.ts",
     "src/xray-protos/transport/**/*.ts",
