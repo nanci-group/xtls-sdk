@@ -17,6 +17,9 @@ import {
     IAddSocksUser,
     IAddTrojanUser,
     IAddVlessUser,
+    IAddInbound,
+    IRemoveInbound,
+    IListInbounds,
 } from './interfaces';
 import { Account as TrojanAccount } from '../xray-protos/proxy/trojan/config';
 import { Account as VlessAccount } from '../xray-protos/proxy/vless/account';
@@ -25,6 +28,7 @@ import { Account as Shadowsocks2022Account } from '../xray-protos/proxy/shadowso
 import { Account as SocksAccount } from '../xray-protos/proxy/socks/config';
 import { Account as HttpAccount } from '../xray-protos/proxy/http/config';
 import { RemoveUserResponseModel } from './models/remove-user/remove-user.response.model';
+import { AddInboundResponseModel, RemoveInboundResponseModel, ListInboundsResponseModel } from './models';
 
 /**
  * Service for managing Xray inbound handlers and their users
@@ -445,5 +449,137 @@ export class HandlerService {
      */
     public get rawClient(): HandlerServiceClient {
         return this.client;
+    }
+
+    /**
+     * Adds a new inbound handler to the server.
+     * 
+     * @param {IAddInbound} data - The inbound configuration data
+     * @returns {Promise<ISdkResponse<AddInboundResponseModel>>} A promise that resolves to:
+     * - On success: An object with `isOk: true` and `data.success` indicating if inbound was added
+     * - On failure: An object with `isOk: false` and error details from HANDLER_ERRORS
+     * 
+     * @example
+     * ```typescript
+     * const handler = new HandlerService(channel);
+     * const inboundConfig = {
+     *   tag: 'my-inbound',
+     *   receiverSettings: {...},
+     *   proxySettings: {...}
+     * };
+     * 
+     * const response = await handler.addInbound({ inbound: inboundConfig });
+     * 
+     * if (response.isOk) {
+     *   console.log('Inbound added successfully');
+     * } else {
+     *   console.error(response.message);
+     * }
+     * ```
+     */
+    public async addInbound(data: IAddInbound): Promise<ISdkResponse<AddInboundResponseModel>> {
+        try {
+            await this.client.addInbound({
+                inbound: data.inbound,
+            });
+
+            return {
+                isOk: true,
+                data: new AddInboundResponseModel(true),
+            };
+        } catch (error) {
+            let message = '';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            return {
+                isOk: false,
+                ...HANDLER_ERRORS.ADD_INBOUND_ERROR(message),
+            };
+        }
+    }
+
+    /**
+     * Removes an inbound handler from the server.
+     * 
+     * @param {IRemoveInbound} data - The inbound removal data containing the tag
+     * @returns {Promise<ISdkResponse<RemoveInboundResponseModel>>} A promise that resolves to:
+     * - On success: An object with `isOk: true` and `data.success` indicating if inbound was removed
+     * - On failure: An object with `isOk: false` and error details from HANDLER_ERRORS
+     * 
+     * @example
+     * ```typescript
+     * const handler = new HandlerService(channel);
+     * const response = await handler.removeInbound({ tag: 'my-inbound' });
+     * 
+     * if (response.isOk) {
+     *   console.log('Inbound removed successfully');
+     * } else {
+     *   console.error(response.message);
+     * }
+     * ```
+     */
+    public async removeInbound(data: IRemoveInbound): Promise<ISdkResponse<RemoveInboundResponseModel>> {
+        try {
+            await this.client.removeInbound({
+                tag: data.tag,
+            });
+
+            return {
+                isOk: true,
+                data: new RemoveInboundResponseModel(true),
+            };
+        } catch (error) {
+            let message = '';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            return {
+                isOk: false,
+                ...HANDLER_ERRORS.REMOVE_INBOUND_ERROR(message),
+            };
+        }
+    }
+
+    /**
+     * Lists all inbound handlers on the server.
+     * 
+     * @param {IListInbounds} data - The listing options (optional)
+     * @returns {Promise<ISdkResponse<ListInboundsResponseModel>>} A promise that resolves to:
+     * - On success: An object with `isOk: true` and `data.inbounds` containing array of inbound configurations
+     * - On failure: An object with `isOk: false` and error details from HANDLER_ERRORS
+     * 
+     * @example
+     * ```typescript
+     * const handler = new HandlerService(channel);
+     * const response = await handler.listInbounds({ isOnlyTags: false });
+     * 
+     * if (response.isOk) {
+     *   console.log('Inbounds:', response.data.inbounds);
+     * } else {
+     *   console.error(response.message);
+     * }
+     * ```
+     */
+    public async listInbounds(data: IListInbounds = {}): Promise<ISdkResponse<ListInboundsResponseModel>> {
+        try {
+            const response = await this.client.listInbounds({
+                isOnlyTags: data.isOnlyTags ?? false,
+            });
+
+            return {
+                isOk: true,
+                data: new ListInboundsResponseModel(response.inbounds),
+            };
+        } catch (error) {
+            let message = '';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            return {
+                isOk: false,
+                ...HANDLER_ERRORS.LIST_INBOUNDS_ERROR(message),
+            };
+        }
     }
 }

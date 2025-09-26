@@ -117,6 +117,13 @@ const api = new XtlsApi(ip: string, port: string);
 ### HandlerService
 
 Service for managing inbound handlers and their users.
+#### Inbound Management Methods
+
+| Method                                      | Description                  | Parameters                                               |
+| ------------------------------------------- | ---------------------------- | -------------------------------------------------------- |
+| `addInbound(data: IAddInbound)`             | Add new inbound handler      | `data`: { inbound: InboundHandlerConfig }                |
+| `removeInbound(data: IRemoveInbound)`       | Remove inbound handler       | `data`: { tag: string }                                  |
+| `listInbounds(data?: IListInbounds)`        | List all inbound handlers    | `data`: { isOnlyTags?: boolean } (optional)             |
 
 #### User Management Methods
 
@@ -140,6 +147,28 @@ Service for managing inbound handlers and their users.
 Example usage:
 
 ```typescript
+// Add a new inbound handler
+const inboundConfig = {
+  tag: 'my-vless-inbound',
+  receiverSettings: {
+    // receiver configuration here
+  },
+  proxySettings: {
+    // VLESS proxy configuration here  
+  }
+};
+
+const addResult = await api.handler.addInbound({ inbound: inboundConfig });
+if (addResult.isOk) {
+  console.log('Inbound added successfully');
+}
+
+// List all inbound handlers
+const inbounds = await api.handler.listInbounds();
+if (inbounds.isOk) {
+  console.log('Inbounds:', inbounds.data.inbounds);
+}
+
 // Get all users in an inbound
 const users = await api.handler.getInboundUsers('main-inbound');
 if (users.isOk) {
@@ -153,6 +182,12 @@ const newUser = await api.handler.addTrojanUser({
   password: 'secure-password',
   level: 0,
 });
+
+// Remove an inbound handler
+const removeResult = await api.handler.removeInbound({ tag: 'my-vless-inbound' });
+if (removeResult.isOk) {
+  console.log('Inbound removed successfully');
+}
 
 // Remove a user
 const removed = await api.handler.removeUser('main-inbound', 'user@example.com');

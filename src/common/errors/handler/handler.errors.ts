@@ -16,4 +16,16 @@ export const HANDLER_ERRORS = {
         code: 'A005',
         message: `Error getting inbound users count: ${message}`,
     }),
+    ADD_INBOUND_ERROR: (message: string) => ({
+        code: 'A006',
+        message: `Error adding inbound: ${message}`,
+    }),
+    REMOVE_INBOUND_ERROR: (message: string) => ({
+        code: 'A007',
+        message: `Error removing inbound: ${message}`,
+    }),
+    LIST_INBOUNDS_ERROR: (message: string) => ({
+        code: 'A008',
+        message: `Error listing inbounds: ${message}`,
+    }),
 } as const;
