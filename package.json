@@ -11,15 +11,6 @@
     "prepublish": "npx rimraf build && tsc",
     "build": "tsc"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remnawave/xtls-sdk.git"
-  },
-  "homepage": "https://github.com/remnawave/xtls-sdk#readme",
-  "bugs": {
-    "url": "https://github.com/remnawave/xtls-sdk/issues"
-  },
-  "author": "Remnawave <https://github.com/remnawave>",
   "license": "AGPL-3.0-only",
   "keywords": [
     "xtls",
