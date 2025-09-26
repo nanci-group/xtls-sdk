@@ -11,6 +11,15 @@
     "prepublish": "npx rimraf build && tsc",
     "build": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nanci-group/xtls-sdk.git"
+  },
+  "homepage": "https://github.com/nanci-group/xtls-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/nanci-group/xtls-sdk/issues"
+  },
+  "author": "Remnawave <https://github.com/remnawave>",
   "license": "AGPL-3.0-only",
   "keywords": [
     "xtls",
@@ -30,18 +39,18 @@
     "vmess"
   ],
   "dependencies": {
+    "@bufbuild/protobuf": "^2.2.2",
     "ipaddr.js": "2.2.0",
     "long": "^5.2.3",
     "nice-grpc": "^2.1.10",
-    "protobufjs": "^7.4.0",
-    "@bufbuild/protobuf": "^2.2.2"
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "tar": "^7.4.3",
     "@types/jest": "^29.5.2",
     "@types/node": "^22.9.0",
     "grpc-tools": "^1.12.4",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.10",
+    "tar": "^7.4.3",
     "ts-proto": "^2.2.7",
     "typescript": "^5.6.3"
   }
